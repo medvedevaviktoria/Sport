@@ -1,0 +1,18 @@
+﻿using Sport.AppForms;
+using Sport.AppModels;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Sport.AppServices
+{
+    internal class ContextManager
+    {
+        public static User user;
+        public static LoginForm loginForm;
+        public static ProductForm productForm;
+        public static OrderForm orderForm;
+    }
+}
