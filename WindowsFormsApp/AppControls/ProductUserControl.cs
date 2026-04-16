@@ -92,8 +92,8 @@ namespace Sport.AppControls
                 return;
             }
 
-                //если админ -> переходим к форме редактирования продукта
-                CreateUpdateProductForm createUpdateProductForm = new CreateUpdateProductForm(_product);
+            //если админ -> переходим к форме редактирования продукта
+            CreateUpdateProductForm createUpdateProductForm = new CreateUpdateProductForm(_product);
             DialogResult saved = createUpdateProductForm.ShowDialog();
 
             //если товар отредактирован -> обновляем список на форме продуктов

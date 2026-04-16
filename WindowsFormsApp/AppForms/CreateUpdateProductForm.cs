@@ -20,7 +20,9 @@ namespace Sport.AppForms
     public partial class CreateUpdateProductForm : Form
     {
         private Product _product;
+        private string errorMessage; //переменная с сообщением, в чём ошибка валидации(чтобы вывести для пользователя)
         private bool addPhoto = false;//флажок для понимания: добавили мы фото или нет
+        private string _newPhotoFileName = null;
         public CreateUpdateProductForm()
         {
             InitializeComponent();
@@ -41,9 +43,9 @@ namespace Sport.AppForms
 
         private void buttonBack_Click(object sender, EventArgs e)
         {
-            if (addPhoto)
+            if (addPhoto && _newPhotoFileName != null)
             {
-                DeleteOldPhoto();
+                DeletePhoto(_newPhotoFileName);
             }
             this.Close();
         }
@@ -112,8 +114,6 @@ namespace Sport.AppForms
             _product.ProductPhoto = productPhotoTextBox.Text;
         }
 
-        private string errorMessage; //переменная с сообщением, в чём ошибка валидации(чтобы вывести для пользователя)
-
         /// <summary>
         /// Валидация данных
         /// </summary>
@@ -142,18 +142,50 @@ namespace Sport.AppForms
 
             try
             {
+                string oldPhoto = _product.ProductPhoto; // запомнили старое название фото
+
                 FillModelFields();
                 if (_product.IsNew())
                 {
                     Program.context.Products.Add(_product);
                 }
                 Program.context.SaveChanges();
+
+                // сохранилось успешно - удаляем старое фото
+                if (addPhoto && !string.IsNullOrEmpty(oldPhoto))
+                {
+                    DeletePhoto(oldPhoto);  // удаляем старое
+                }
+
                 MessageBox.Show("Данные сохранены", "Успех", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 DialogResult = DialogResult.OK;
             }
             catch (Exception ex)
             {
+                // при ошибке сохранения - удаляем новое фото
+                if (addPhoto && !string.IsNullOrEmpty(_newPhotoFileName))
+                {
+                    DeletePhoto(_newPhotoFileName);
+                }
                 MessageBox.Show(ex.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+
+        /// <summary>
+        /// Установка максимума скидки
+        /// </summary>
+        private void productMaxDiscountAmountNumericUpDown_ValueChanged(object sender, EventArgs e)
+        {
+            if (productMaxDiscountAmountNumericUpDown.Value > productDiscountAmountNumericUpDown.Maximum)
+            {
+                productDiscountAmountNumericUpDown.Maximum = productMaxDiscountAmountNumericUpDown.Value;
+            }
+            else if (productMaxDiscountAmountNumericUpDown.Value < productDiscountAmountNumericUpDown.Value)
+            {
+                productDiscountAmountNumericUpDown.Maximum = productMaxDiscountAmountNumericUpDown.Value;
+                productDiscountAmountNumericUpDown.Value = productDiscountAmountNumericUpDown.Maximum;
+                
             }
         }
 
@@ -168,8 +200,8 @@ namespace Sport.AppForms
 
             if (dialogResult == DialogResult.OK)
             {
-                string newFileName = SaveImageFromDialog(openFileDialog1.FileName);
-                productPhotoTextBox.Text = newFileName;
+                _newPhotoFileName = SaveImageFromDialog(openFileDialog1.FileName);
+                productPhotoTextBox.Text = _newPhotoFileName;
                 addPhoto = true;
             }
         }
@@ -187,9 +219,6 @@ namespace Sport.AppForms
             Bitmap resizedImage = new Bitmap(originalImage, newImageSize.Width, newImageSize.Height);
             string fileName = Guid.NewGuid().ToString().Substring(0, 8) + ".jpg"; // PKGH Генерация уникального имени файла. Длина - 8 символов.
             string savePath = GetImagePath(fileName);
-
-            // Удаляем старое фото, если оно было
-            DeleteOldPhoto();
 
             // PKGH Сохраняем изображение
             resizedImage.Save(savePath);
@@ -228,11 +257,10 @@ namespace Sport.AppForms
         }
 
         /// <summary>
-        /// Удаление старой фотографии продукта
+        /// Удаление фотографии продукта
         /// </summary>
-        private void DeleteOldPhoto()
+        private void DeletePhoto(string fileName)
         {
-            string fileName = productPhotoTextBox.Text; // текущее имя фото в текстбоксе (я сделала эту переменную, если мы вдруг уже выбрали один раз фотку в данном окне, и после этого СРАЗУ ЖЕ решили поменять её, нажав на кнопку "Фото", то она у нас смогла удалиться. если этого не делать - удаляться только что добавленная фотка не будет)
             if (!string.IsNullOrEmpty(fileName))
             {
                 try
@@ -241,24 +269,8 @@ namespace Sport.AppForms
                 }
                 catch (Exception ex)
                 {
-                    Debug.Print($"Не удалось удалить файл {fileName}."); // PKGH Отладочная печать.
+                    Debug.Print($"Не удалось удалить файл {fileName}: {ex.Message}"); // PKGH Отладочная печать.
                 }
-            }
-        }
-
-        /// <summary>
-        /// Установка максимума скидки
-        /// </summary>
-        private void productMaxDiscountAmountNumericUpDown_ValueChanged(object sender, EventArgs e)
-        {
-            if (productMaxDiscountAmountNumericUpDown.Value > productDiscountAmountNumericUpDown.Maximum)
-            {
-                productDiscountAmountNumericUpDown.Maximum = productMaxDiscountAmountNumericUpDown.Value;
-            }
-            else if (productMaxDiscountAmountNumericUpDown.Value < productDiscountAmountNumericUpDown.Value)
-            {
-                productDiscountAmountNumericUpDown.Value = productMaxDiscountAmountNumericUpDown.Value;
-                productDiscountAmountNumericUpDown.Maximum = productMaxDiscountAmountNumericUpDown.Value;
             }
         }
 
@@ -275,10 +287,22 @@ namespace Sport.AppForms
 
                 try
                 {
+                    string oldPhoto = _product.ProductPhoto; // запомнили старое
                     Program.context.Products.Remove(_product);
                     Program.context.SaveChanges();
                     ContextManager.productForm.RefreshList();
-                    DeleteOldPhoto();
+
+                    // после успешного удаления из БД - удаляем фото
+                    if (!string.IsNullOrEmpty(oldPhoto))
+                    {
+                        DeletePhoto(oldPhoto);
+                    }
+                    // если было выбрано новое фото - удаляем и его
+                    else if (addPhoto && !string.IsNullOrEmpty(_newPhotoFileName))
+                    {
+                        DeletePhoto(_newPhotoFileName);
+                    }
+
                     DialogResult = DialogResult.OK;
                 }
                 catch (DbUpdateException ex)

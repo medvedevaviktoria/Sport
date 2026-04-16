@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.labelRole = new System.Windows.Forms.Label();
             this.labelFIO = new System.Windows.Forms.Label();
@@ -38,6 +39,8 @@
             this.buttonOrders = new System.Windows.Forms.Button();
             this.buttonAdd = new System.Windows.Forms.Button();
             this.advancedPanel = new System.Windows.Forms.Panel();
+            this.label4 = new System.Windows.Forms.Label();
+            this.comboBoxManufacturer = new System.Windows.Forms.ComboBox();
             this.labelCount = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.comboBoxDiscount = new System.Windows.Forms.ComboBox();
@@ -47,6 +50,9 @@
             this.radioButtonLess = new System.Windows.Forms.RadioButton();
             this.radioButtonMore = new System.Windows.Forms.RadioButton();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
+            this.medvedeva_vy_sportDataSet = new Sport.medvedeva_vy_sportDataSet();
+            this.productManufacturerBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.productManufacturerTableAdapter = new Sport.medvedeva_vy_sportDataSetTableAdapters.ProductManufacturerTableAdapter();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -58,6 +64,8 @@
             this.splitContainer2.SuspendLayout();
             this.advancedPanel.SuspendLayout();
             this.groupBox1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.medvedeva_vy_sportDataSet)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.productManufacturerBindingSource)).BeginInit();
             this.SuspendLayout();
             // 
             // splitContainer1
@@ -184,6 +192,8 @@
             // 
             // advancedPanel
             // 
+            this.advancedPanel.Controls.Add(this.label4);
+            this.advancedPanel.Controls.Add(this.comboBoxManufacturer);
             this.advancedPanel.Controls.Add(this.labelCount);
             this.advancedPanel.Controls.Add(this.label2);
             this.advancedPanel.Controls.Add(this.comboBoxDiscount);
@@ -197,6 +207,28 @@
             this.advancedPanel.TabIndex = 0;
             this.advancedPanel.Visible = false;
             // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(359, 12);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(89, 13);
+            this.label4.TabIndex = 7;
+            this.label4.Text = "Производитель:";
+            // 
+            // comboBoxManufacturer
+            // 
+            this.comboBoxManufacturer.DataSource = this.productManufacturerBindingSource;
+            this.comboBoxManufacturer.DisplayMember = "ProductManufacturerName";
+            this.comboBoxManufacturer.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxManufacturer.FormattingEnabled = true;
+            this.comboBoxManufacturer.Location = new System.Drawing.Point(362, 33);
+            this.comboBoxManufacturer.Name = "comboBoxManufacturer";
+            this.comboBoxManufacturer.Size = new System.Drawing.Size(141, 21);
+            this.comboBoxManufacturer.TabIndex = 6;
+            this.comboBoxManufacturer.ValueMember = "ProductManufacturerID";
+            this.comboBoxManufacturer.SelectedIndexChanged += new System.EventHandler(this.comboBoxManufacturer_SelectedIndexChanged);
+            // 
             // labelCount
             // 
             this.labelCount.AutoSize = true;
@@ -209,7 +241,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(222, 37);
+            this.label2.Location = new System.Drawing.Point(190, 12);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(47, 13);
             this.label2.TabIndex = 4;
@@ -224,7 +256,7 @@
             "0-9,99%",
             "10-14,99%",
             "15% и более"});
-            this.comboBoxDiscount.Location = new System.Drawing.Point(286, 34);
+            this.comboBoxDiscount.Location = new System.Drawing.Point(193, 32);
             this.comboBoxDiscount.Name = "comboBoxDiscount";
             this.comboBoxDiscount.Size = new System.Drawing.Size(141, 21);
             this.comboBoxDiscount.TabIndex = 3;
@@ -233,7 +265,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(525, 38);
+            this.label3.Location = new System.Drawing.Point(606, 38);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(42, 13);
             this.label3.TabIndex = 2;
@@ -241,9 +273,9 @@
             // 
             // textBoxSearch
             // 
-            this.textBoxSearch.Location = new System.Drawing.Point(576, 33);
+            this.textBoxSearch.Location = new System.Drawing.Point(654, 33);
             this.textBoxSearch.Name = "textBoxSearch";
-            this.textBoxSearch.Size = new System.Drawing.Size(224, 20);
+            this.textBoxSearch.Size = new System.Drawing.Size(146, 20);
             this.textBoxSearch.TabIndex = 1;
             this.textBoxSearch.TextChanged += new System.EventHandler(this.textBoxSearch_TextChanged);
             // 
@@ -292,6 +324,20 @@
             this.flowLayoutPanel1.Size = new System.Drawing.Size(1096, 403);
             this.flowLayoutPanel1.TabIndex = 0;
             // 
+            // medvedeva_vy_sportDataSet
+            // 
+            this.medvedeva_vy_sportDataSet.DataSetName = "medvedeva_vy_sportDataSet";
+            this.medvedeva_vy_sportDataSet.SchemaSerializationMode = System.Data.SchemaSerializationMode.IncludeSchema;
+            // 
+            // productManufacturerBindingSource
+            // 
+            this.productManufacturerBindingSource.DataMember = "ProductManufacturer";
+            this.productManufacturerBindingSource.DataSource = this.medvedeva_vy_sportDataSet;
+            // 
+            // productManufacturerTableAdapter
+            // 
+            this.productManufacturerTableAdapter.ClearBeforeFill = true;
+            // 
             // ProductForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -303,6 +349,7 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "ООО «Спорт» - Товары";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.ProductForm_FormClosed);
+            this.Load += new System.EventHandler(this.ProductForm_Load);
             this.Shown += new System.EventHandler(this.ProductForm_Shown);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel1.PerformLayout();
@@ -318,6 +365,8 @@
             this.advancedPanel.PerformLayout();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.medvedeva_vy_sportDataSet)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.productManufacturerBindingSource)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -343,5 +392,10 @@
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
         private System.Windows.Forms.Label labelRole;
         private System.Windows.Forms.Label labelFIO;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.ComboBox comboBoxManufacturer;
+        private medvedeva_vy_sportDataSet medvedeva_vy_sportDataSet;
+        private System.Windows.Forms.BindingSource productManufacturerBindingSource;
+        private medvedeva_vy_sportDataSetTableAdapters.ProductManufacturerTableAdapter productManufacturerTableAdapter;
     }
 }

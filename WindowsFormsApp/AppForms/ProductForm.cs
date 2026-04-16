@@ -83,6 +83,7 @@ namespace Sport.AppForms
                 tmpProducts = tmpProducts.OrderByDescending(p => p.ProductCost);
             }
 
+            //фильтр по цене
             if (comboBoxDiscount.SelectedIndex > 0)
             {
                 switch (comboBoxDiscount.SelectedIndex)
@@ -97,6 +98,13 @@ namespace Sport.AppForms
                         tmpProducts = tmpProducts.Where(p => p.ProductDiscountAmount >= 15);
                         break;
                 }
+            }
+
+            //фильтр по производителю
+            ProductManufacturer selected = (ProductManufacturer)comboBoxManufacturer.SelectedItem;
+            if (selected != null && selected.ProductManufacturerID > 0)
+            {
+                tmpProducts = tmpProducts.Where(p => p.ProductManufacturerID == selected.ProductManufacturerID);
             }
 
             labelCount.Text = $"Найдено: {tmpProducts.Count()} из {Program.context.Products.Count()}";
@@ -167,6 +175,27 @@ namespace Sport.AppForms
         }
 
         private void radioButtonLess_CheckedChanged(object sender, EventArgs e)
+        {
+            RefreshList();
+        }
+
+        private void ProductForm_Load(object sender, EventArgs e)
+        {
+            FillManufacturer();
+            comboBoxManufacturer.SelectedIndex = 0;
+            RefreshList();
+        }
+
+        private void FillManufacturer()
+        {
+            List<ProductManufacturer> manufacturers = Program.context.ProductManufacturers.ToList();
+            ProductManufacturer productManufacturer = new ProductManufacturer();
+            productManufacturer.ProductManufacturerName = "Все производители";
+            manufacturers.Insert(0, productManufacturer);
+            productManufacturerBindingSource.DataSource = manufacturers;
+        }
+
+        private void comboBoxManufacturer_SelectedIndexChanged(object sender, EventArgs e)
         {
             RefreshList();
         }
