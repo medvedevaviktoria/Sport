@@ -298,7 +298,7 @@ namespace Sport.AppForms
                         DeletePhoto(oldPhoto);
                     }
                     // если было выбрано новое фото - удаляем и его
-                    else if (addPhoto && !string.IsNullOrEmpty(_newPhotoFileName))
+                    if (addPhoto && !string.IsNullOrEmpty(_newPhotoFileName))
                     {
                         DeletePhoto(_newPhotoFileName);
                     }
